@@ -1,6 +1,6 @@
 # Deployment Options
 
-Each file should be named such that it is easy to see where it was originally deployed. Anything that uses SSL required the presence of a secret containing the TLS information.  For the purposes of this repository, (https://cert-manager.io/docs/installation/ "cert-manager") was installed and configured on the cluster prior to applying the chart.  See below for notes on that.
+Each file should be named such that it is easy to see where it was originally deployed. Anything that uses SSL required the presence of a secret containing the TLS information.  For the purposes of this repository, (https://cert-manager.io/docs/installation/ "cert-manager") was installed and configured on the cluster prior to applying the chart.  There is a separate docs one that (../cert-manager?README.md "over here")
 
 ## GKE Installation with GKE Ingress and SSL
 
@@ -50,4 +50,4 @@ persistence:
     size: 100Gi
 ```
 
-# Test
+
