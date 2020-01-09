@@ -1,0 +1,26 @@
+---
+image: agregory99/concourse
+imageTag: 5.5.6-ubuntu
+concourse:
+  web:
+    externalUrl: http://conc.gke.arg-pivotal.com
+web:
+  service:
+    type: NodePort
+  ingress:
+    enabled: true
+    annotations:
+      kubernetes.io/ingress.global-static-ip-name: conc-helm-gke-web
+    hosts:
+      - conc.gke.arg-pivotal.com
+worker:
+  replicas: 3
+postgresql:
+  image:
+    registry: 
+    repository: agregory99/postgres
+    tag: 0.0.1
+persistence:
+  worker:
+    size: 100Gi
+

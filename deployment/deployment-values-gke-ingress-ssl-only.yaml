@@ -1,0 +1,32 @@
+---
+image: agregory99/concourse
+imageTag: 5.5.6-ubuntu
+concourse:
+  web:
+    externalUrl: https://conc.gke.arg-pivotal.com
+web:
+  service:
+    type: NodePort
+  ingress:
+    enabled: true
+    annotations:
+      cert-manager.io/cluster-issuer: "letsencrypt-prod"
+      kubernetes.io/ingress.global-static-ip-name: conc-helm-gke-web
+      kubernetes.io/ingress.allow-http: "false"
+    hosts:
+      - conc.gke.arg-pivotal.com
+    tls:
+      - hosts: 
+        - conc.gke.arg-pivotal.com
+        secretName: concourse-external-cert
+worker:
+  replicas: 3
+postgresql:
+  image:
+    registry: 
+    repository: agregory99/postgres
+    tag: 0.0.1
+persistence:
+  worker:
+    size: 100Gi
+

@@ -1,0 +1,16 @@
+---
+image: harbor.homelab.arg-pivotal.com/concourse-pks-helm/concourse
+imageTag: 5.5.3-ubuntu
+imagePullSecrets: ["regcred"] #remove this line for public image registry
+concourse:
+  web:
+    externalUrl: http://concourse-external.homelab.arg-pivotal.com:8080
+web:
+  service:
+    type: LoadBalancer
+postgresql:
+  image:
+    registry: harbor.homelab.arg-pivotal.com
+    repository: concourse-pks-helm/postgres
+    tag: 0.0.1
+    pullSecrets: ["regcred"] # remove for public image registry

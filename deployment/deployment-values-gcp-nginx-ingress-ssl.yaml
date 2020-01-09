@@ -1,0 +1,28 @@
+---
+image: agregory99/concourse
+imageTag: 5.5.6-ubuntu
+concourse:
+  web:
+    externalUrl: https://web.concourse-pks-helm.pks.gcp-nonprod.arg-pivotal.com
+web:
+  ingress:
+    enabled: true
+    annotations:
+      kubernetes.io/ingress.class: "nginx"
+      cert-manager.io/cluster-issuer: "letsencrypt-prod"
+    hosts:
+      - web.concourse-pks-helm.pks.gcp-nonprod.arg-pivotal.com
+    tls:
+    - hosts: 
+      - web.concourse-pks-helm.pks.gcp-nonprod.arg-pivotal.com
+      secretName: concourse-external-cert
+worker:
+  replicas: 3
+postgresql:
+  image:
+    registry: 
+    repository: agregory99/postgres
+    tag: 0.0.1
+persistence:
+  worker:
+    size: 100Gi
