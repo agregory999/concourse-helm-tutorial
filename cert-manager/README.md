@@ -10,7 +10,7 @@ Create the service account, assign it to the *DNS Administrator* role, and gener
 
 ### Screen shots
 
-!(https://github.com/agregory999/concourse-helm-tutorial/blob/master/cert-manager/GCP-ServiceAccount-Step1.png)
+![](GCP-ServiceAccount-Step1.png)
 
 ## Create a secret within kube cluster
 
