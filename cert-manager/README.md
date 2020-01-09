@@ -10,6 +10,8 @@ Create the service account, assign it to the *DNS Administrator* role, and gener
 
 ### Screen shots
 
+!(https://github.com/agregory999/concourse-helm-tutorial/blob/master/cert-manager/GCP-ServiceAccount-Step1.png)
+
 ## Create a secret within kube cluster
 
 The key needs to be added to the cluster in order for the cert-manager DNS01 solver to communicate with your GCP Cloud DNS zone:
