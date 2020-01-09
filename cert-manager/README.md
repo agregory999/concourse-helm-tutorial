@@ -11,6 +11,11 @@ Create the service account, assign it to the *DNS Administrator* role, and gener
 ### Screen shots
 
 ![](GCP-ServiceAccount-Step1.png)
+![](GCP-ServiceAccount-Step2.png)
+
+Save the resulting key somewhere good, and refer to it below as key.json
+
+![](GCP-ServiceAccount-Step3.png)
 
 ## Create a secret within kube cluster
 
