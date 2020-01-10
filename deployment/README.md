@@ -140,7 +140,44 @@ persistence:
 ```
 ## GKE Installation with GKE Ingress (No SSL)
 
-As mentioned, this option will create a deployment that uses Ingress to provide access to Concourse.  GKE will sense the creation of ingress and create a GCP Load Balancer.  An annotation is used to tell GCP the named static IP to take for the 
+As mentioned, this option will create a deployment that uses Ingress to provide access to Concourse.  GKE will sense the creation of ingress and create a GCP Load Balancer.  An annotation called **kubernetes.io/ingress.global-static-ip-name** is used to tell GCP the named static IP to take for the Infrastructure Load Balancer that is spun up.  Using this strategy allows you to pre-allocate a public IP and map it into DNS prior to installation of the Helm chart.
+
+- NOTE: GKE Ingress requires a service of type NodePort or LoadBalancer, as ClusterIP will not work.
+- NOTE: Changed replica count to 3 to mirror cluster size
+
+### Command
+
+```helm upgrade --install concourse-helm -f deployment/deployment-values-gke-ingress-ssl-only.yaml ./charts```
+
+### deployment-values-gke-ingress-no-ssl.yaml
+
+```yaml
+---
+image: agregory99/concourse
+imageTag: 5.5.6-ubuntu
+concourse:
+  web:
+    externalUrl: http://conc.gke.arg-pivotal.com
+web:
+  service:
+    type: NodePort
+  ingress:
+    enabled: true
+    annotations:
+      kubernetes.io/ingress.global-static-ip-name: conc-helm-gke-web
+    hosts:
+      - conc.gke.arg-pivotal.com
+worker:
+  replicas: 3
+postgresql:
+  image:
+    registry:
+    repository: agregory99/postgres
+    tag: 0.0.1
+persistence:
+  worker:
+    size: 100Gi
+```
 
 ## GKE Installation with GKE Ingress and SSL
 
