@@ -1,0 +1,30 @@
+concourse:
+  web:
+    credhub:
+      enabled: true
+      url: https://concourse.homelab.arg-pivotal.com:8844
+      authenticationMode: "secrets"
+      useCaCert: true
+secrets:
+  credhubCaCert: |
+    -----BEGIN CERTIFICATE-----
+    MIIDEzCCAfugAwIBAgIUET0yty1pE09PYaZRXh66Q7bSO1owDQYJKoZIhvcNAQEL
+    BQAwGTEXMBUGA1UEAxMOY29udHJvbHBsYW5lY2EwHhcNMTkwNTA2MTcwNzAzWhcN
+    MjAwNTA1MTcwNzAzWjAZMRcwFQYDVQQDEw5jb250cm9scGxhbmVjYTCCASIwDQYJ
+    KoZIhvcNAQEBBQADggEPADCCAQoCggEBAO60lIo+P2EvMm7jrg+fSLXE0Y9L2wdM
+    0SOS8hkr+LEgjDPfb5cYA2VFyCC5uJPeOvwmGqrjMRs6NJG32fWNsqEWaVwJvq0g
+    ab2m7rEKNe/ouNSegw+9KOoUEGqzOO0e3s1RY1ajQRPNYbmQc/uaFq5tkl/K24j7
+    TN92s92mk3UA6O2kmrLL/Rf2pKKTGGQS8hHTVq0MetshB+k/zK+fLnW1xCKo402M
+    NCR66p+D8LR/bPHY1nIZKxhFO5ouO9Gp4s5I6rLlB5tu2L8rTNw9PeIozdT4osPi
+    gilB7Chq0EDYsisCevF/KavdpUqOZ0FPnehwXgsd2IqFj3USNmtkW7cCAwEAAaNT
+    MFEwHQYDVR0OBBYEFCGRN2krdC4mNYsrmOZ7iOZ7SYsVMB8GA1UdIwQYMBaAFCGR
+    N2krdC4mNYsrmOZ7iOZ7SYsVMA8GA1UdEwEB/wQFMAMBAf8wDQYJKoZIhvcNAQEL
+    BQADggEBAFZBQ3oiLgrdOHEUUezmyU4cpb9CCjcEri1ueASVT56Tm88JOOIYAL5j
+    Oz+sYc7y/BwwROfd0IIb9i3M1MJuHoaLy5OAMoSLK2fatyHO35xlRwgMJLk5yrc7
+    Vsu7m6/95vqyGW20xVWIIsMKIoK2+xSuYpmcXs+lNtRag3mnfv4AOYSjJCUmQ3TI
+    j6Ry4dnf8MZYKfsomXb2sc0EaZXIWpu7sxaNxI914AYxufwvB8TySbIDontljz33
+    bxiHx42jXMBgU50REMrETLdcL1zcNNclAX9GAoBjY+9bv4Am7mqUkcjn3D0xDQO0
+    b9+FzqJh2cK8X9jcnQWAHG7HfI7WOcE=
+    -----END CERTIFICATE-----
+  credhubClientId: concourse_to_credhub
+  credhubClientSecret: Q8M1MRp2fpL5Z0n8Sc8NFeL2annkjG

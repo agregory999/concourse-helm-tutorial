@@ -1,0 +1,3 @@
+persistence:
+  worker:
+    size: 100Gi

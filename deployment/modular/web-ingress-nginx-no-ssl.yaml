@@ -1,0 +1,7 @@
+web:
+  ingress:
+    enabled: true
+    annotations:
+      kubernetes.io/ingress.class: "nginx"
+    hosts:
+      - web.ing.conc.homelab.arg-pivotal.com

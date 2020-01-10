@@ -1,0 +1,4 @@
+worker:
+  replicas: 3
+  hardAntiAffinity: true
+

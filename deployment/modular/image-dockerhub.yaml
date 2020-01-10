@@ -1,0 +1,9 @@
+image: harbor.homelab.arg-pivotal.com/concourse-pks-helm/concourse
+imageTag: 5.5.6-ubuntu
+imagePullSecrets: ["regcred"] #remove this line for public image registry
+postgresql:
+  image:
+    registry: harbor.homelab.arg-pivotal.com
+    repository: concourse-pks-helm/postgres
+    tag: 0.0.1
+    pullSecrets: ["regcred"] # remove for public image registry
