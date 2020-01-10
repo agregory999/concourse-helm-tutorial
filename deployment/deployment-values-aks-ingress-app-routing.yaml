@@ -1,0 +1,23 @@
+---
+image: agregory99/concourse
+imageTag: 5.5.6-ubuntu
+concourse:
+  web:
+    externalUrl: http://dunno.ca1acc448e294d98aa0c.eastus.aksapp.io
+web:
+  ingress:
+    enabled: true
+    annotations:
+      kubernetes.io/ingress.class: addon-http-application-routing
+    hosts:
+      - dunno.ca1acc448e294d98aa0c.eastus.aksapp.io
+worker:
+  replicas: 3
+postgresql:
+  image:
+    registry:
+    repository: agregory99/postgres
+    tag: 0.0.1
+persistence:
+  worker:
+    size: 100Gi
