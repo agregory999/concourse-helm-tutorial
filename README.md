@@ -8,9 +8,15 @@ For the most part, please follow the main instructions located here:
 What is included in this repo are some example scripts and deployment files to start with.  These files can control just about anything that Concourse can be configured with More values and options are located here:
 [Deployment Values YAML Structure](https://github.com/helm/charts/blob/master/stable/concourse/values.yaml)
 
-## Choices
+## Choices...
 
 While following the documentation, several choices must be made.  There likely is no wrong way to do it, but knowing that all of configuration is available to add to the helm chart customization file is import.  Some things to consider:
+
+#### Cloud Offerings
+
+This has been tested on multiple clouds with varying degrees of integration with vendor-specific add-ons.  For example, Azure AKS offers [HTTP Routing](https://docs.microsoft.com/en-us/azure/aks/http-application-routing), which creates a DNS zone and entry for an ingress automatically.  An example is provided.
+
+GKE offers built-in Ingress routing, and the ability to select a pre-allocated IP address has been tested.  Also, if TLS is enabled, GKE can sync the certificate up with the Infrastructure Load Balancer.
 
 #### Private / Public Repo 
 
@@ -37,6 +43,7 @@ There are a couple of generic things that should be applicable in all cases.  Na
 * Metal-LB as Load Balancer
 * Using NGINX Ingress Controller
 * Using GKE and GCE Ingress
+* AKS with HTTP Application Routing
 
 ## Other Configurations
 
