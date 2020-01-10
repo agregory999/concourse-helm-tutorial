@@ -1,12 +1,31 @@
-# Deployment Options
+# Deployment Values
+
+In order to affect the final state of the deployment, we make changes to the **deployment-values.yaml** file.  This can be done in one of 2 ways.  First, we can take all changes want, put them into the file in the correct order, and install/upgrade the Helm chart.  Or, we can beak down the types of things we want into modular sections, and apply them with multiple switches in the command line.  
+
+Example:
+
+```
+agregory@jump:~/concourse-helm-tutorial/deployment$ helm upgrade --install concourse-helm \
+--values deployment-values-lb-gce.yaml ${UNZIPPED_DOWNLOAD}/charts/
+```
+or
+```bash
+andrew@jump:~/concourse-helm-tutorial/deployment$ helm upgrade --install concourse-helm \
+-f modular/concourse-web-external-url.yaml -f modular/worker-affinity.yaml -f modular/image-harbor.yaml \
+-f modular/web-ingress-nginx-no-ssl.yaml  -f modular/external-credhub.yaml ${UNZIPPED_DOWNLOAD}/charts/
+```
+*where UNZIPPED_DOWNLOAD refers to the directory on your system where the artifact from PivNet was extracted.  The chsrts/ directory should be in there*
+
+# Practical Examples (non-modular)
 
 Each file should be named such that it is easy to see where it was originally deployed. Anything that uses SSL required the presence of a secret containing the TLS information.  For the purposes of this repository, [cert-manager](https://cert-manager.io/docs/installation/) was installed and configured on the cluster prior to applying the chart.  There is a separate doc on that [over here](../cert-manager/README.md)
+
 
 ## Vanilla Installation
 
 What you get from the [Concourse docs](https://docs.pivotal.io/p-concourse/v5/installation/install-concourse-helm/) gives your the following.  Applying this gives you a basic Concourse install with no external access.  Here is the example given, without the pullSecret, which isn't required if using Docker Hub public repositories:
 
-```
+```yaml
 ---
 image: agregory99/concourse
 imageTag: 5.5.6-ubuntu
@@ -61,7 +80,7 @@ On some platforms, such as PKS on vSphere, there is no assigned IP for a service
 
 In this example, since this is running on vSphere, and since Harbor Registry is installed, we can use both:
 
-```
+```yaml
 ---
 image: harbor.homelab.arg-pivotal.com/concourse-helm/concourse
 imageTag: 5.5.6-ubuntu
@@ -89,7 +108,7 @@ In the example below, \*.concourse-pks-helm.pks.gcp-nonprod.arg-pivotal.com is m
 
 -NOTE: Annotations need to be added 
 
-```
+```yaml
 ---
 image: agregory99/concourse
 imageTag: 5.5.6-ubuntu
@@ -121,7 +140,7 @@ persistence:
 ```
 ## GKE Installation with GKE Ingress (No SSL)
 
-
+As mentioned, this option will create a deployment that uses Ingress to provide access to Concourse.  GKE will sense the creation of ingress and create a GCP Load Balancer.  An annotation is used to tell GCP the named static IP to take for the 
 
 ## GKE Installation with GKE Ingress and SSL
 
