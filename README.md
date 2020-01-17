@@ -44,10 +44,10 @@ There are a couple of generic things that should be applicable in all cases.  Na
 * Using NGINX Ingress Controller
 * Using GKE and GCE Ingress
 * AKS with HTTP Application Routing
+* AKS with Nginx Ingress and SSL (Cert-manager)
 
 ## [CLICK HERE FOR DETAILED DOCS ON EACH SCENARIO](./deployment/)
 
 ## Other Configurations
 
-* cert-manager with automatic SSL cert for web frontend
-* Connection to existing Credhub (for use with Platform Automation)
+* Connection to existing Credhub (for use with Platform Automation) - coming soon
