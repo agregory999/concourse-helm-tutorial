@@ -5,6 +5,9 @@ Refer to the docs for [cert-manager](https://cert-manager.io/docs/installation/)
 After installing the main product, there are a couple of options for challenge completion.  If you have set up DNS via Google Cloud DNS or Azure DNS, the following steps will work for integrating cert-manager within your cluster:
 
 [Azure](#azure-dns)
+[GCP](#gcp)
+---------
+# GCP
 
 ## Create GCP Service Account and Key
 
@@ -168,4 +171,112 @@ agregory@jump:~/concourse-helm$
 
 # Azure DNS
 
-test
+On Azure, you must create a DNS zone, then generate a service principal in order to talk to it.  Then generate a secret and refer to that in the **ClusterIssuer** that you create.
+
+## Principal Generation
+
+Commands to run from a shell where Azure CLI is set up (I am using 2.0.80)
+
+```bash
+AZURE_CERT_MANAGER_NEW_SP_NAME=azure-dns-sp
+AZURE_DNS_ZONE_RESOURCE_GROUP=aks
+AZURE_DNS_ZONE=aks.arg-pivotal.com
+DNS_SP=$(az ad sp create-for-rbac --name $AZURE_CERT_MANAGER_NEW_SP_NAME)
+
+AZURE_CERT_MANAGER_SP_APP_ID=$(echo $DNS_SP | jq -r '.appId')
+AZURE_CERT_MANAGER_SP_PASSWORD=$(echo $DNS_SP | jq -r '.password')
+AZURE_TENANT_ID=$(echo $DNS_SP | jq -r '.tenant')
+
+az role assignment delete --assignee $AZURE_CERT_MANAGER_SP_APP_ID --role Contributor
+DNS_ID=$(az network dns zone show --name $AZURE_DNS_ZONE --resource-group $AZURE_DNS_ZONE_RESOURCE_GROUP --query "id" --output tsv)
+echo $DNS_ID
+az role assignment create --assignee $AZURE_CERT_MANAGER_SP_APP_ID --role "DNS Zone Contributor" --scope $DNS_ID
+
+echo "AZURE_CERT_MANAGER_SP_APP_ID: $AZURE_CERT_MANAGER_SP_APP_ID"
+echo "AZURE_SUBSCRIPTION_ID: $AZURE_CERT_MANAGER_SP_PASSWORD"
+echo "AZURE_TENANT_ID: $AZURE_TENANT_ID"
+echo "AZURE_DNS_ZONE: $AZURE_DNS_ZONE"
+echo "AZURE_DNS_ZONE_RESOURCE_GROUP: $AZURE_DNS_ZONE_RESOURCE_GROUP"
+```
+## Create a Secret
+
+This secret needs to be there in order for it to work.  Do it while the environment variables are there.  Obviously, make sure you have the cluster in context.
+
+```bash
+kubectl create secret generic azuredns-config --from-literal=client-secret=$AZURE_CERT_MANAGER_SP_PASSWORD -n cert-manager
+```
+
+## Create ClusterIssuer
+Create ClusterIssuer that looks like this:
+
+```yaml
+apiVersion: cert-manager.io/v1alpha2
+kind: ClusterIssuer
+metadata:
+  annotations:
+  generation: 1
+  name: letsencrypt-prod-azure-dns
+spec:
+  acme:
+    email: agregory@pivotal.io
+    privateKeySecretRef:
+      name: letsencrypt-prod
+    server: https://acme-v02.api.letsencrypt.org/directory
+    solvers:
+    - dns01:
+        azuredns:
+          clientID: <REPLACE>
+          clientSecretSecretRef:
+          # The following is the secret we created in Kubernetes. Issuer will use this to present challenge to Azure DNS.
+            name: azuredns-config
+            key: client-secret
+          subscriptionID: <REPLACE>
+          tenantID: <REPLACE>
+          resourceGroupName: <REPLACE>
+          hostedZoneName: <REPLACE>
+          # Azure Cloud Environment, default to AzurePublicCloud
+          environment: AzurePublicCloud
+```
+
+Apply it.  
+
+## Test it
+
+Here is a test cert:
+
+```yaml
+apiVersion: cert-manager.io/v1alpha2
+kind: Certificate
+metadata:
+  name: test.aks.arg-pivotal.com
+  namespace: default
+spec:
+  secretName: test-aks-cert-tls
+  issuerRef:
+    kind: ClusterIssuer
+    name: letsencrypt-prod-azure-dns
+  commonName: test.aks.arg-pivotal.com
+  dnsNames:
+  - test.aks.arg-pivotal.com
+```
+
+Apply it and watch for the challenge (no errors):
+
+```bash
+PacMook-Bro-2:AKS agregory$ k apply -f test-azure-dns-cert.yaml
+certificate.cert-manager.io/test.aks.arg-pivotal.com created
+
+PacMook-Bro-2:AKS agregory$ k get challenge
+NAME                                                        STATE     DOMAIN                     AGE
+test.aks.arg-pivotal.com-3403757277-1068339460-4235686920   pending   test.aks.arg-pivotal.com   4s
+
+PacMook-Bro-2:AKS agregory$ k describe challenge test.aks.arg-pivotal.com-3403757277-1068339460-4235686920
+Name:         test.aks.arg-pivotal.com-3403757277-1068339460-4235686920
+
+Events:
+  Type    Reason     Age   From          Message
+  ----    ------     ----  ----          -------
+  Normal  Started    4s    cert-manager  Challenge scheduled for processing
+  Normal  Presented  3s    cert-manager  Presented challenge using dns-01 challenge mechanism
+```
+
