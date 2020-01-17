@@ -45,6 +45,8 @@ There are a couple of generic things that should be applicable in all cases.  Na
 * Using GKE and GCE Ingress
 * AKS with HTTP Application Routing
 
+## [CLICK HERE FOR DETAILED DOCS ON EACH SCENARIO](./deployment/)
+
 ## Other Configurations
 
 * cert-manager with automatic SSL cert for web frontend
