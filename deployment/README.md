@@ -227,6 +227,80 @@ persistence:
     size: 100Gi
 ```
 
+## Azure with Application Routing (Automatic Ingress)
+
+When using Azure, it is possible to enable for non-production a mechanism that will automatically create an ingress rule and DNS entry in the zone that is part of the AKS cluster.  The rest of this on is the same as what worked on other clouds. Note that the DNS Zone called *ca1acc448e294d98aa0c.eastus.aksapp.io* was created (will be different for each cluster) when the AKS cluster was created.
+
+### deployment-values-aks-ingress-app-routing.yaml
+
+```yaml
+---
+image: agregory99/concourse
+imageTag: 5.5.6-ubuntu
+concourse:
+  web:
+    externalUrl: http://concourse.ca1acc448e294d98aa0c.eastus.aksapp.io
+web:
+  ingress:
+    enabled: true
+    annotations:
+      kubernetes.io/ingress.class: addon-http-application-routing
+    hosts:
+      - concourse.ca1acc448e294d98aa0c.eastus.aksapp.io
+worker:
+  replicas: 3
+postgresql:
+  image:
+    registry:
+    repository: agregory99/postgres
+    tag: 0.0.1
+persistence:
+  worker:
+    size: 100Gi
+```
+
+## Azure with NGINX Ingress and SSL and Affinity
+
+This one adds the ability to specify (per docs) a label of nodes that will accept workers.  It also forces a one-worker-per-node policy.  The label that was used is equivalent to the label that Azure adds to nodes in that VM Scale Set.  Also, cert-manager is installed and configured with Azure DNS, which it used to complete the ACME challenge.  NGINX Ingress was installed (not App Routing), and set up with an external DNS Zone, which then gets used by the ingress object created.
+
+NOTE: The issuer name for cert-manager is different, as that required the setup of Azure DNS with DNS01 challenges, documented elsewhere.
+
+### deployment-values-aks-ingress-nginx-ssl.yaml
+
+```yaml
+---
+image: agregory99/concourse
+imageTag: 5.5.6-ubuntu
+concourse:
+  web:
+    externalUrl: http://concourse.ingress.aks.arg-pivotal.com
+web:
+  ingress:
+    enabled: true
+    annotations:
+      cert-manager.io/cluster-issuer: "letsencrypt-prod-azure-dns"
+      kubernetes.io/ingress.class: nginx
+    hosts:
+      - concourse.ingress.aks.arg-pivotal.com
+    tls:
+      - hosts:
+        - concourse.ingress.aks.arg-pivotal.com
+        secretName: concourse-external-cert
+worker:
+  replicas: 3
+  nodeSelector:
+    agentpool: nodepoolb2ms
+  hardAntiAffinity: true
+postgresql:
+  image:
+    registry:
+    repository: agregory99/postgres
+    tag: 0.0.1
+persistence:
+  worker:
+    size: 100Gi
+```
+
 ## Connect Concourse to External CredHub
 
 Conenct to external
