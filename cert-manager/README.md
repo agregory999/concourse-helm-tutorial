@@ -283,4 +283,4 @@ Events:
 
 Challenge on Azure in progress:
 
-![](Azsure DNS Challenge.png)
+![](Azure DNS Challenge.png)
