@@ -285,4 +285,28 @@ Challenge on Azure in progress:
 
 ![](Azure%20DNS%20Challenge.png)
 
+Within a minute or 2 it is cleaned up and the cert is valid:
+
+## Verification
+
+```bash
+PacMook-Bro-2:AKS agregory$ k describe challenge test.aks.arg-pivotal.com-3403757277-1068339460-4235686920
+Error from server (NotFound): challenges.acme.cert-manager.io "test.aks.arg-pivotal.com-3403757277-1068339460-4235686920" not found
+PacMook-Bro-2:AKS agregory$ k get cert,order,challenge
+NAME                                                   READY   SECRET              AGE
+certificate.cert-manager.io/test.aks.arg-pivotal.com   True    test-aks-cert-tls   88s
+
+NAME                                                                        STATE   AGE
+order.acme.cert-manager.io/test.aks.arg-pivotal.com-3403757277-1068339460   valid   88s
+
+Look at the certificate data with some grepping:
+
+PacMook-Bro-2:AKS agregory$ k get secret test-aks-cert-tls -o 'go-template={{index .data "tls.crt"}}' | base64 --decode | openssl x509  -text| grep -A 5 "Issuer:"
+        Issuer: C=US, O=Let's Encrypt, CN=Let's Encrypt Authority X3
+        Validity
+            Not Before: Jan 15 16:33:13 2020 GMT
+            Not After : Apr 14 16:33:13 2020 GMT
+        Subject: CN=test.aks.arg-pivotal.com
+        Subject Public Key Info:
+```
 
