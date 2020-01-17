@@ -4,7 +4,7 @@ Refer to the docs for [cert-manager](https://cert-manager.io/docs/installation/)
 
 After installing the main product, there are a couple of options for challenge completion.  If you have set up DNS via Google Cloud DNS or Azure DNS, the following steps will work for integrating cert-manager within your cluster:
 
-[Azure] (#azure-dns)
+[Azure](#azure-dns)
 
 ## Create GCP Service Account and Key
 
