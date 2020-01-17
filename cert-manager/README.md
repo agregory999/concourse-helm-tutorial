@@ -2,7 +2,9 @@
 
 Refer to the docs for [cert-manager](https://cert-manager.io/docs/installation/) for exact instructions for your platform.  Either Helm or directly work fine.
 
-After installing the main product, there are a couple of options for challenge completion.  If you have set up DNS via Google Cloud DNS, the following steps will work for integrating cert-manager within your cluster:
+After installing the main product, there are a couple of options for challenge completion.  If you have set up DNS via Google Cloud DNS or Azure DNS, the following steps will work for integrating cert-manager within your cluster:
+
+[Azure] (#azure-dns)
 
 ## Create GCP Service Account and Key
 
@@ -163,3 +165,7 @@ ID  START_TIME                STATUS
 agregory@jump:~/concourse-helm$ gcloud dns record-sets list --zone gke-zone|grep test
 agregory@jump:~/concourse-helm$
 ```
+
+# Azure DNS
+
+test
