@@ -5,6 +5,7 @@ Refer to the docs for [cert-manager](https://cert-manager.io/docs/installation/)
 After installing the main product, there are a couple of options for challenge completion.  If you have set up DNS via Google Cloud DNS or Azure DNS, the following steps will work for integrating cert-manager within your cluster:
 
 [Azure](#azure-dns)
+
 [GCP](#gcp)
 ---------
 # GCP
@@ -280,3 +281,6 @@ Events:
   Normal  Presented  3s    cert-manager  Presented challenge using dns-01 challenge mechanism
 ```
 
+Challenge on Azure in progress:
+
+![](Azsure DNS Challenge.png)
