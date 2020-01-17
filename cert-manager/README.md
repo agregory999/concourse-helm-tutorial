@@ -284,3 +284,5 @@ Events:
 Challenge on Azure in progress:
 
 ![](Azure DNS Challenge.png)
+
+
